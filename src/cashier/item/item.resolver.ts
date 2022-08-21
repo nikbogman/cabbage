@@ -3,5 +3,6 @@ import { ItemService } from './item.service';
 
 @Resolver()
 export class ItemResolver {
-  constructor(private readonly itemService: ItemService) {}
+  constructor(private readonly itemService: ItemService) { }
+
 }

@@ -41,6 +41,13 @@ type Category {
   products: [Product!]!
 }
 
+type Cart {
+  id: ID!
+  total: Float!
+  sessionId: String!
+  items: [Item!]!
+}
+
 type Query {
   findAllCategories: [Category!]!
   findCategoryById(id: String!): Category!
@@ -51,4 +58,6 @@ type Query {
   findAllVariants: [Variant!]!
   findVariantById(id: String!): Variant!
   findVariantBySlug(slug: String!): Variant!
+  getCart: Cart!
+  purgeCart: Cart!
 }

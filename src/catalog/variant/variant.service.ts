@@ -13,11 +13,9 @@ export class VariantService extends CatalogBaseService(Variant) {
         })
     }
 
-    // async findBySlug(slug: string) {
-    //     return this.prisma.variant.findUnique({
-    //         where: { slug }, include: {
-    //             items: true
-    //         }
-    //     })
-    // }
+    getAvailability(variant: Variant) {
+        let taken = 0;
+        variant.items.map(i => taken += i.quantity)
+        return variant.stock - taken;
+    }
 }

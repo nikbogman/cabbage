@@ -11,7 +11,8 @@ import { join } from 'path';
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'graphql/schema.gql')
+      autoSchemaFile: join(process.cwd(), 'graphql/schema.gql'),
+      context: ({ req, res }) => ({ req, res })
     }),
     AuthModule, CatalogModule, CashierModule],
   providers: [PrismaService]

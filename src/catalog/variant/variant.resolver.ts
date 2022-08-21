@@ -9,9 +9,6 @@ export class VariantResolver extends CatalogBaseResolver(Variant) {
 
   @ResolveField()
   availability(@Parent() variant: Variant) {
-    const { items } = variant;
-    let nonfree = 0;
-    items.map(i => nonfree += i.quantity)
-    return variant.stock - nonfree;
+    return this.variantService.getAvailability(variant);
   }
 }
