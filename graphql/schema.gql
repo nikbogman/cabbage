@@ -1,0 +1,54 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Item {
+  id: ID!
+  cartId: String!
+  variantId: String!
+  total: Float!
+  quantity: Float!
+}
+
+type Variant {
+  id: ID!
+  slug: String!
+  name: String!
+  optionName: String!
+  description: String!
+  price: Float!
+  stock: Float!
+  committed: Float!
+  availability: Float!
+  productId: String!
+  items: [Item!]!
+}
+
+type Product {
+  id: ID!
+  slug: String!
+  name: String!
+  description: String!
+  categoryId: String!
+  variants: [Variant!]!
+}
+
+type Category {
+  id: ID!
+  slug: String!
+  name: String!
+  description: String!
+  products: [Product!]!
+}
+
+type Query {
+  findAllCategories: [Category!]!
+  findCategoryById(id: String!): Category!
+  findCategoryBySlug(slug: String!): Category!
+  findAllProducts: [Product!]!
+  findProductById(id: String!): Product!
+  findProductBySlug(slug: String!): Product!
+  findAllVariants: [Variant!]!
+  findVariantById(id: String!): Variant!
+  findVariantBySlug(slug: String!): Variant!
+}
