@@ -11,10 +11,10 @@ export function CatalogBaseService(classRef: any): any {
             return this.prisma[model].findMany(this.queryOptions);
         }
         async findById(id: string) {
-            return this.prisma[model].findUnique({ where: { id }, ...this.queryOptions });
+            return this.prisma[model].findUniqueOrThrow({ where: { id }, ...this.queryOptions });
         }
         async findBySlug(slug: string, options?: object) {
-            return this.prisma[model].findUnique({ where: { slug }, ...this.queryOptions });
+            return this.prisma[model].findUniqueOrThrow({ where: { slug }, ...this.queryOptions });
         }
     }
     return BaseService;

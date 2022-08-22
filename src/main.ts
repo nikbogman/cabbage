@@ -7,6 +7,8 @@ import { PrismaService } from './prisma.service';
 declare module 'express-session' {
   interface SessionData {
     total: number
+    cartId: string,
+    userId: string
   }
 }
 

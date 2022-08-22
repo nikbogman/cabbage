@@ -8,10 +8,22 @@ export class CartService {
 
     async getCart(session: SessionType) {
         if (!session.total) session.total = 0;
-        return this.prisma.cart.upsert({
-            where: { sessionId: session.id },
+        const query = { sessionId: session.id }
+        const cart = await this.prisma.cart.upsert({
+            where: query,
             update: {},
-            create: { sessionId: session.id }
+            create: query,
+        })
+        if (!session.cartId) session.cartId = cart.id;
+        return cart;
+    }
+
+    async updateCartTotal(session: SessionType, recepieTotal: number) {
+        session.total += recepieTotal;
+        return this.prisma.cart.update({
+            where: { id: session.cartId },
+            data: { total: session.total },
+            include: { items: true }
         })
     }
 
@@ -22,6 +34,9 @@ export class CartService {
     }
 
     // add product to cart
+    async addToCart(session: SessionType, qty) {
+
+    }
     // remove product from cart
 
 }

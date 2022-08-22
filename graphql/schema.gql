@@ -41,11 +41,21 @@ type Category {
   products: [Product!]!
 }
 
+type FieldError {
+  field: String!
+  message: String!
+}
+
 type Cart {
   id: ID!
   total: Float!
   sessionId: String!
   items: [Item!]!
+}
+
+type CartResponse {
+  error: FieldError
+  data: Cart
 }
 
 type Query {
@@ -60,4 +70,6 @@ type Query {
   findVariantBySlug(slug: String!): Variant!
   getCart: Cart!
   purgeCart: Cart!
+  addItemToCart(slug: String!, qty: Float!): CartResponse!
+  removeItemFromCart(slug: String!, qty: Float!): CartResponse!
 }
