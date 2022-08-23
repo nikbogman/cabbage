@@ -32,11 +32,4 @@ export class CartService {
         session.destroy(err => { })
         return this.prisma.cart.delete({ where: { sessionId: session.id } })
     }
-
-    // add product to cart
-    async addToCart(session: SessionType, qty) {
-
-    }
-    // remove product from cart
-
 }

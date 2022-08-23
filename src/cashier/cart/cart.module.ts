@@ -6,7 +6,13 @@ import { ItemService } from '../item/item.service';
 import { VariantService } from 'src/catalog/variant/variant.service';
 
 @Module({
-  providers: [CartResolver, CartService, PrismaService, ItemService, VariantService]
+  providers: [
+    CartResolver,
+    CartService,
+    PrismaService,
+    ItemService,
+    VariantService
+  ]
 })
 export class CartModule { }
 

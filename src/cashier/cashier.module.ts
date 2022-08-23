@@ -9,4 +9,4 @@ import { OrderModule } from './order/order.module';
   providers: [CashierResolver, CashierService],
   imports: [CartModule, ItemModule, OrderModule]
 })
-export class CashierModule {}
+export class CashierModule { }

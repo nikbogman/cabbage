@@ -74,5 +74,21 @@ model Session {
   expiresAt DateTime
 }
 
-// model Order
-// model User
+model Order {
+  id          String @id @default(cuid())
+  total       Float
+  cart        Json
+  userDetails Json
+}
+
+model User {
+  id             String @id @default(uuid())
+  firstName      String
+  lastName       String
+  address        String
+  mobileNumber   String
+  paymentDetails Json?
+
+  passwordHash String
+  email        String
+}

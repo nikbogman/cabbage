@@ -6,9 +6,13 @@ import { PrismaService } from 'src/prisma.service';
 export class ItemService {
     constructor(private readonly prisma: PrismaService) { }
 
+    async getItems(cartId: string) {
+        return this.prisma.item.findMany({ where: { cartId } });
+    }
+
     async addItem(cartId: string, quantity: number, variant: Variant) {
-        const existing = variant.items.find(i => i.cartId === cartId);
-        if (!existing)
+        const existingItem = variant.items.find(i => i.cartId === cartId);
+        if (!existingItem)
             return this.prisma.item.create({
                 data: {
                     cartId,
@@ -18,10 +22,10 @@ export class ItemService {
                 }
             })
         return this.prisma.item.update({
-            where: { id: existing.id },
+            where: { id: existingItem.id },
             data: {
-                quantity: existing.quantity + quantity,
-                total: existing.total + quantity * variant.price
+                quantity: existingItem.quantity + quantity,
+                total: existingItem.total + quantity * variant.price
             }
         })
     }
@@ -41,5 +45,4 @@ export class ItemService {
             }
         })
     }
-
 }

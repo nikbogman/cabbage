@@ -69,6 +69,10 @@ type Query {
   findVariantById(id: String!): Variant!
   findVariantBySlug(slug: String!): Variant!
   getCart: Cart!
+  getItems: [Item!]!
+}
+
+type Mutation {
   purgeCart: Cart!
   addItemToCart(slug: String!, qty: Float!): CartResponse!
   removeItemFromCart(slug: String!, qty: Float!): CartResponse!

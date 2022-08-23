@@ -3,16 +3,11 @@ import { AppModule } from './app.module';
 import * as session from 'express-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { PrismaService } from './prisma.service';
+import { MySessionData } from './types';
 
 declare module 'express-session' {
-  interface SessionData {
-    total: number
-    cartId: string,
-    userId: string
-  }
+  interface SessionData extends MySessionData { }
 }
-
-
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

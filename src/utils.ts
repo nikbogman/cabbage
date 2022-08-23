@@ -33,3 +33,4 @@ export function Response<T>(classRef: Type<T>): Type<IResponseType<T>> {
 }
 
 export const createFieldError = (field: string, message: string) => ({ error: { field, message } })
+

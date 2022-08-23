@@ -1,5 +1,7 @@
-import { Resolver, Query, Context, Args } from '@nestjs/graphql';
+import { Resolver, Query, Context, Args, Mutation } from '@nestjs/graphql';
 import { VariantService } from 'src/catalog/variant/variant.service';
+import { Session } from 'src/session.decorator';
+import { SessionType } from 'src/types';
 import { createFieldError } from 'src/utils';
 import { ItemService } from '../item/item.service';
 import { CartService } from './cart.service';
@@ -14,24 +16,24 @@ export class CartResolver {
 	) { }
 
 	@Query(type => Cart)
-	async getCart(@Context() ctx: any) {
-		return this.cartService.getCart(ctx.req.session)
+	async getCart(@Session() session: SessionType) {
+		return this.cartService.getCart(session)
 	}
 
-	@Query(type => Cart)
-	async purgeCart(@Context() ctx: any) {
-		return this.cartService.purgeCart(ctx.req.session)
+	@Mutation(type => Cart)
+	async purgeCart(@Session() session: SessionType) {
+		return this.cartService.purgeCart(session)
 	}
 
-	@Query(type => CartResponse)
+	@Mutation(type => CartResponse)
 	async addItemToCart(
 		@Args('slug') slug: string,
-		@Args('qty') qty: number = 0,
-		@Context() ctx: any
+		@Args('qty') qty: number = 1,
+		@Session() session: SessionType
 	) {
 		try {
 			const [cart, variant] = await Promise.all([
-				this.cartService.getCart(ctx.req.session),
+				this.cartService.getCart(session),
 				this.variantService.findBySlug(slug)
 			])
 			const availability = this.variantService.getAvailability(variant);
@@ -39,33 +41,34 @@ export class CartResolver {
 				return createFieldError('qty', 'Variant is not available to purchase at the moment')
 
 			await this.itemService.addItem(cart.id, qty, variant)
-			const updatedCart = this.cartService.updateCartTotal(ctx.req.session, variant.price * qty)
+			const updatedCart = this.cartService.updateCartTotal(session, variant.price * qty)
 			return { data: updatedCart };
 		} catch (err) {
 			return createFieldError('slug', err.message)
 		}
 	}
 
-	@Query(type => CartResponse)
+	@Mutation(type => CartResponse)
 	async removeItemFromCart(
 		@Args('slug') slug: string,
-		@Args('qty') qty: number = 0,
-		@Context() ctx: any
+		@Args('qty') qty: number = 1,
+		@Session() session: SessionType
 	) {
 		try {
+			if (!session.cartId)
+				return createFieldError('qty', 'Cart already empty')
+
 			const variant = await this.variantService.findBySlug(slug);
 			const availability = this.variantService.getAvailability(variant);
 			if (availability + qty > variant.stock)
 				return createFieldError('qty', 'Quantity to remove is too much')
 
-			if (!ctx.req.session.cartId)
-				return createFieldError('qty', 'Cart already empty')
-
-			await this.itemService.removeItem(ctx.req.session.cartId, qty, variant)
-			const updatedCart = this.cartService.updateCartTotal(ctx.req.session, -(variant.price * qty));
+			await this.itemService.removeItem(session.cartId, qty, variant)
+			const updatedCart = this.cartService.updateCartTotal(session, -(variant.price * qty));
 			return { data: updatedCart };
 		} catch (err) {
 			return createFieldError('slug', err.message)
 		}
 	}
+
 }
