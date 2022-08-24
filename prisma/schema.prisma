@@ -82,13 +82,13 @@ model Order {
 }
 
 model User {
-  id             String @id @default(uuid())
-  firstName      String
-  lastName       String
-  address        String
-  mobileNumber   String
-  paymentDetails Json?
+  id           String @id
+  firstName    String
+  lastName     String
+  address      String
+  mobileNumber String
 
-  passwordHash String
-  email        String
+  hash  String
+  salt  String
+  email String @unique
 }
