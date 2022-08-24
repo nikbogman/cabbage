@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { SessionType } from 'src/types';
+import { SessionType } from 'src/utils/types';
 
 @Injectable()
 export class CartService {

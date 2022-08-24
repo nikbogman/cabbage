@@ -35,4 +35,13 @@ export class AuthService {
         session.userId = user.id;
         return { data: user };
     }
+
+    async logout(session: SessionType) {
+        if (!session.userId) return {
+            error: { field: 'userId', message: 'User not logged in' },
+            data: false
+        }
+        session.userId = undefined;
+        return { data: true }
+    }
 }

@@ -8,7 +8,7 @@ interface ICategory extends Model {
 
 @ObjectType()
 export default class Category implements ICategory {
-    @Field(type => ID)
+    @Field(() => ID)
     id: string;
 
     @Field()
@@ -20,7 +20,7 @@ export default class Category implements ICategory {
     @Field()
     description: string;
 
-    @Field(type => [Product], { defaultValue: [] })
+    @Field(() => [Product], { defaultValue: [] })
     products: Product[];
 }
 

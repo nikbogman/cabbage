@@ -8,7 +8,7 @@ interface IProduct extends Model {
 
 @ObjectType()
 export default class Product implements IProduct {
-    @Field(type => ID)
+    @Field(() => ID)
     id: string;
 
     @Field()
@@ -23,7 +23,7 @@ export default class Product implements IProduct {
     @Field()
     categoryId: string;
 
-    @Field(type => [Variant], { defaultValue: [] })
+    @Field(() => [Variant], { defaultValue: [] })
     variants: Variant[];
 }
 

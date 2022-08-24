@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import * as session from 'express-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { PrismaService } from './prisma.service';
-import { MySessionData } from './types';
+import { MySessionData } from './utils/interfaces';
 
 declare module 'express-session' {
   interface SessionData extends MySessionData { }

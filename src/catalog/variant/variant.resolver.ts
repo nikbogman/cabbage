@@ -3,7 +3,7 @@ import { CatalogBaseResolver } from '../catalog.resolver';
 import { VariantService } from './variant.service';
 import Variant from './variant.type';
 
-@Resolver(of => Variant)
+@Resolver(() => Variant)
 export class VariantResolver extends CatalogBaseResolver(Variant) {
   constructor(private readonly variantService: VariantService) { super(variantService) }
 

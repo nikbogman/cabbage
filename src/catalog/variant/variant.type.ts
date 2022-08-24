@@ -8,7 +8,7 @@ interface IVariant extends Model {
 
 @ObjectType()
 export default class Variant implements IVariant {
-    @Field(type => ID)
+    @Field(() => ID)
     id: string;
 
     @Field()
@@ -38,7 +38,7 @@ export default class Variant implements IVariant {
     @Field()
     productId: string;
 
-    @Field(type => [Item], { defaultValue: [] })
+    @Field(() => [Item], { defaultValue: [] })
     items: Item[];
 }
 
