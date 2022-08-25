@@ -1,6 +1,10 @@
 import { ObjectType, Field } from "@nestjs/graphql";
-import { IFieldError } from "./interfaces";
-import { Response } from "./functions";
+
+export interface IFieldError {
+    field: string;
+    message: string;
+}
+
 
 @ObjectType()
 export class FieldError implements IFieldError {
@@ -11,5 +15,6 @@ export class FieldError implements IFieldError {
     message: string;
 }
 
-@ObjectType()
-export class BooleanResponse extends Response(Boolean) { }
+export const createFieldError = (field: string, message: string) => ({
+    error: { field, message }
+})
