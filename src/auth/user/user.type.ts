@@ -1,6 +1,6 @@
 import { ObjectType, Field, ID } from "@nestjs/graphql";
 import { User as Model } from "@prisma/client";
-import { Response } from "src/utils";
+import { Response } from "../../utils/error-response";
 
 @ObjectType()
 export default class User implements Model {

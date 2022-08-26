@@ -1,11 +1,11 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
-import { Session } from 'src/utils/functions';
 import { VariantService } from 'src/catalog/variant/variant.service';
-import { createFieldError } from 'src/utils/functions';
-import { SessionType } from 'src/utils/types';
+import { createFieldError } from '../../utils/error-response'
+import { SessionType, Session } from '../../session';
 import { ItemService } from '../item/item.service';
 import { CartService } from './cart.service';
 import Cart, { CartResponse } from './cart.type';
+import { BooleanResponse } from 'src/utils/error-response/response';
 
 @Resolver()
 export class CartResolver {
@@ -20,9 +20,14 @@ export class CartResolver {
 		return this.cartService.getCart(session)
 	}
 
-	@Mutation(type => Cart)
+	@Mutation(type => BooleanResponse)
 	async purgeCart(@Session() session: SessionType) {
-		return this.cartService.purgeCart(session)
+		if (await this.cartService.purgeCart(session)) {
+			if (!session.userId)
+				session.destroy(err => { })
+			return { data: true }
+		}
+		return { data: false }
 	}
 
 	@Mutation(type => CartResponse)

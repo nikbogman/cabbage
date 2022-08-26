@@ -2,13 +2,13 @@ import { Args, Resolver, Mutation, Query } from '@nestjs/graphql';
 import { UserResponse } from './user/user.type';
 import { AuthInput } from './auth.type';
 import { AuthService } from './auth.service';
-import { Session } from 'src/utils/functions';
-import { BooleanResponse } from 'src/utils/graphql-types';
-import { SessionType } from 'src/utils/types';
+import { Session, SessionType } from '../session';
+import { BooleanResponse } from '../utils/error-response/response';
+import { CartService } from 'src/cashier/cart/cart.service';
 
 @Resolver()
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService, private readonly cartService: CartService) { }
 
   @Mutation(type => UserResponse)
   async register(@Args() input: AuthInput) {
@@ -28,6 +28,9 @@ export class AuthResolver {
   async logout(
     @Session() session: SessionType
   ) {
-    return this.authService.logout(session);
+    const cart = await this.cartService.purgeCart(session)
+    const user = await this.authService.logout(session)
+    session.destroy(err => { })
+    return { data: cart === user }
   }
 }

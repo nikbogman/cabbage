@@ -4,9 +4,11 @@ import { AuthResolver } from './auth.resolver';
 import { PrismaService } from 'prisma/service';
 import { AuthService } from './auth.service';
 import { UserService } from './user/user.service';
+import { CartModule } from 'src/cashier/cart/cart.module';
+import { CartService } from 'src/cashier/cart/cart.service';
 
 @Module({
-  imports: [UserModule],
-  providers: [AuthResolver, AuthService, UserService, PrismaService],
+  imports: [UserModule, CartModule],
+  providers: [AuthResolver, AuthService, UserService, CartService, PrismaService],
 })
 export class AuthModule { }

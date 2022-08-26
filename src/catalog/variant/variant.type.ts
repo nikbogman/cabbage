@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Variant as Model } from "@prisma/client";
-import Item from "../../cashier/item/item.type";
+import Item from "src/cashier/item/item.type";
 
 interface IVariant extends Model {
     items: Item[]

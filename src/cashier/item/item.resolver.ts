@@ -1,6 +1,5 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { Session } from 'src/utils/functions';
-import { SessionType } from 'src/utils/types';
+import { SessionType, Session } from '../../session';
 import { ItemService } from './item.service';
 import Item from './item.type';
 

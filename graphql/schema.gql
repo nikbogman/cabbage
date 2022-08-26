@@ -46,6 +46,11 @@ type FieldError {
   message: String!
 }
 
+type BooleanResponse {
+  error: FieldError
+  data: Boolean
+}
+
 type User {
   id: ID!
   firstName: String!
@@ -62,15 +67,10 @@ type UserResponse {
   data: User
 }
 
-type BooleanResponse {
-  error: FieldError
-  data: Boolean
-}
-
 type Cart {
   id: ID!
   total: Float!
-  sessionId: String!
+  userId: String
   items: [Item!]!
 }
 
@@ -81,16 +81,13 @@ type CartResponse {
 
 type Query {
   me: UserResponse!
+  getCart: Cart!
   findAllCategories: [Category!]!
-  findCategoryById(id: String!): Category!
   findCategoryBySlug(slug: String!): Category!
   findAllProducts: [Product!]!
-  findProductById(id: String!): Product!
   findProductBySlug(slug: String!): Product!
   findAllVariants: [Variant!]!
-  findVariantById(id: String!): Variant!
   findVariantBySlug(slug: String!): Variant!
-  getCart: Cart!
   getItems: [Item!]!
 }
 
@@ -98,7 +95,7 @@ type Mutation {
   register(firstName: String!, lastName: String!, address: String!, mobileNumber: String!, email: String!, password: String!): UserResponse!
   login(email: String!, password: String!): UserResponse!
   logout: BooleanResponse!
-  purgeCart: Cart!
+  purgeCart: BooleanResponse!
   addItemToCart(slug: String!, qty: Float!): CartResponse!
   removeItemFromCart(slug: String!, qty: Float!): CartResponse!
 }

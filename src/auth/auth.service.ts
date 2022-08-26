@@ -5,8 +5,8 @@ import { UserService } from './user/user.service';
 import * as bcrypt from 'bcrypt';
 import * as shortid from 'shortid';
 
-import { createFieldError } from 'src/utils';
-import { SessionType } from 'src/types';
+import { createFieldError } from '../utils/error-response';
+import { SessionType } from '../session';
 
 @Injectable()
 export class AuthService {
@@ -37,11 +37,8 @@ export class AuthService {
     }
 
     async logout(session: SessionType) {
-        if (!session.userId) return {
-            error: { field: 'userId', message: 'User not logged in' },
-            data: false
-        }
+        if (!session.userId) return false
         session.userId = undefined;
-        return { data: true }
+        return true
     }
 }
