@@ -17,7 +17,7 @@ export class CartResolver {
 
 	@Query(type => Cart)
 	async getCart(@Session() session: SessionType) {
-		return this.cartService.getCart(session)
+		return this.cartService.getCart(session);
 	}
 
 	@Mutation(type => BooleanResponse)
@@ -29,6 +29,7 @@ export class CartResolver {
 		}
 		return { data: false }
 	}
+
 
 	@Mutation(type => CartResponse)
 	async addItemToCart(
