@@ -5,7 +5,6 @@ export interface IFieldError {
     message: string;
 }
 
-
 @ObjectType()
 export class FieldError implements IFieldError {
     @Field()

@@ -37,8 +37,8 @@ export class AuthService {
     }
 
     async logout(session: SessionType) {
-        if (!session.userId) return false
+        if (!session.userId) return false;
         session.userId = undefined;
-        return true
+        return true;
     }
 }

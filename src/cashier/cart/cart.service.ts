@@ -24,7 +24,8 @@ export class CartService {
                         include: { items: true }
                     });
                 }
-                await this.prisma.cart.delete({ where: { id: session.cartId } });
+                if (cart.id !== session.cartId)
+                    await this.prisma.cart.delete({ where: { id: session.cartId } });
             }
             if (!cart) cart = await this.prisma.cart.create({
                 data: { userId },
@@ -56,12 +57,14 @@ export class CartService {
         })
     }
 
-    // work on purge cart
+    async deleteCart(cartId: string) {
+        return this.prisma.cart.delete({ where: { id: cartId } });
+    }
+
     async purgeCart(session: SessionType) {
         if (!session.cartId) return false;
-        session.total = 0;
         session.cartId = undefined;
-        if (!session.userId) this.prisma.cart.delete({ where: { id: session.cartId } });
+        session.total = 0;
         return true;
     }
 }

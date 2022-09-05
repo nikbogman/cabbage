@@ -15,23 +15,24 @@ export class CartResolver {
 		private readonly variantService: VariantService
 	) { }
 
-	@Query(type => Cart)
+	@Query(() => Cart)
 	async getCart(@Session() session: SessionType) {
 		return this.cartService.getCart(session);
 	}
 
-	@Mutation(type => BooleanResponse)
+	@Mutation(() => BooleanResponse)
 	async purgeCart(@Session() session: SessionType) {
-		if (await this.cartService.purgeCart(session)) {
-			if (!session.userId)
-				session.destroy(err => { })
+		const cartId = session.cartId;
+		const purged = await this.cartService.purgeCart(session)
+		if (purged) {
+			await this.cartService.deleteCart(cartId)
+			if (!session.userId) session.destroy(err => { })
 			return { data: true }
 		}
-		return { data: false }
+		return { data: false, error: { message: "cart is empthy", field: "session" } }
 	}
 
-
-	@Mutation(type => CartResponse)
+	@Mutation(() => CartResponse)
 	async addItemToCart(
 		@Args('slug') slug: string,
 		@Args('qty') qty: number = 1,
@@ -54,7 +55,7 @@ export class CartResolver {
 		}
 	}
 
-	@Mutation(type => CartResponse)
+	@Mutation(() => CartResponse)
 	async removeItemFromCart(
 		@Args('slug') slug: string,
 		@Args('qty') qty: number = 1,

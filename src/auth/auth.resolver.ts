@@ -8,7 +8,10 @@ import { CartService } from 'src/cashier/cart/cart.service';
 
 @Resolver()
 export class AuthResolver {
-  constructor(private readonly authService: AuthService, private readonly cartService: CartService) { }
+  constructor(
+    private readonly authService: AuthService,
+    private readonly cartService: CartService
+  ) { }
 
   @Mutation(type => UserResponse)
   async register(@Args() input: AuthInput) {
@@ -24,13 +27,16 @@ export class AuthResolver {
     return this.authService.login(email, password, session);
   }
 
+  //
   @Mutation(type => BooleanResponse)
   async logout(
     @Session() session: SessionType
   ) {
-    const cart = await this.cartService.purgeCart(session)
-    const user = await this.authService.logout(session)
+    if (!await this.cartService.purgeCart(session))
+      return { data: false, error: { message: "Cart is already empthy", field: "session" } }
+    if (!await this.authService.logout(session))
+      return { data: false, error: { message: "User not logged in", field: "session" } }
     session.destroy(err => { })
-    return { data: cart === user }
+    return { data: true }
   }
 }

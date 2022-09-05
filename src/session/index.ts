@@ -5,8 +5,14 @@ import { PrismaClient } from '@prisma/client';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
+import { env } from '../config';
 
 export interface MySessionData {
+    cart: {
+        id: string,
+        total: number
+        countOfItems: number
+    },
     cartId: string;
     total: number;
     userId: string;
@@ -21,7 +27,7 @@ export type SessionType = ExpressSession.Session & Partial<ExpressSession.Sessio
 export const sessionMiddleware = (prisma: PrismaClient) => ExpressSession({
     resave: false,
     saveUninitialized: false,
-    secret: 'jdsfsdfnkdsnfsn',
+    secret: env.secret,
     store: new PrismaSessionStore(
         prisma,
         {

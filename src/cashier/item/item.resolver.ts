@@ -7,7 +7,7 @@ import Item from './item.type';
 export class ItemResolver {
   constructor(private readonly itemService: ItemService) { }
 
-  @Query(type => [Item])
+  @Query(() => [Item])
   async getItems(@Session() session: SessionType) {
     return this.itemService.getItems(session.cartId)
   }
