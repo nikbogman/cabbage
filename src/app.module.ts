@@ -9,14 +9,21 @@ import { AuthModule } from './auth/auth.module';
 import { CashierModule } from './cashier/cashier.module';
 import { CatalogModule } from './catalog/catalog.module';
 
+import { PubSub } from "graphql-subscriptions";
+import { GlobalModule } from './utils/module';
+
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
+      installSubscriptionHandlers: true,
       autoSchemaFile,
       context: ({ req }) => ({ req })
     }),
+    GlobalModule,
     AuthModule, CatalogModule, CashierModule],
-  providers: [PrismaService]
+  providers: [PrismaService,
+
+  ]
 })
 export class AppModule { }

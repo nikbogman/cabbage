@@ -4,8 +4,10 @@ import { CartResolver } from './cart.resolver';
 import { PrismaService } from 'prisma/service';
 import { ItemService } from '../item/item.service';
 import { VariantService } from '../../catalog/variant/variant.service';
+import { GlobalModule } from 'src/utils/module';
 
 @Module({
+  imports: [GlobalModule],
   providers: [
     CartResolver,
     CartService,
