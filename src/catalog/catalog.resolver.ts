@@ -16,10 +16,10 @@ export function CatalogBaseResolver<T extends Type<unknown>>(classRef: T): any {
       return this.service.findBySlug(slug);
     }
 
-    // @Query(type => classRef, { name: `find${classRef.name}ById` })
-    // async findById(@Args('id') id: string): Promise<T> {
-    //   return this.service.findById(id);
-    // }
+    @Query(() => classRef, { name: `find${classRef.name}ById` })
+    async findById(@Args('id') id: string): Promise<T> {
+      return this.service.findById(id);
+    }
   }
   return BaseResolverHost;
 }

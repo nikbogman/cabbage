@@ -22,8 +22,6 @@ import { GlobalModule } from './utils/module';
     }),
     GlobalModule,
     AuthModule, CatalogModule, CashierModule],
-  providers: [PrismaService,
-
-  ]
+  providers: [PrismaService]
 })
 export class AppModule { }

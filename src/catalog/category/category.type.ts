@@ -1,13 +1,8 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Category as Model } from "@prisma/client";
-import Product from "../product/product.type";
-
-interface ICategory extends Model {
-    products: Product[]
-}
 
 @ObjectType()
-export default class Category implements ICategory {
+export default class Category implements Model {
     @Field(() => ID)
     id: string;
 
@@ -19,8 +14,5 @@ export default class Category implements ICategory {
 
     @Field()
     description: string;
-
-    @Field(() => [Product], { defaultValue: [] })
-    products: Product[];
 }
 

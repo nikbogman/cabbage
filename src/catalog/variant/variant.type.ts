@@ -1,13 +1,8 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Variant as Model } from "@prisma/client";
-import Item from "src/cashier/item/item.type";
-
-interface IVariant extends Model {
-    items: Item[]
-}
 
 @ObjectType()
-export default class Variant implements IVariant {
+export default class Variant implements Model {
     @Field(() => ID)
     id: string;
 
@@ -37,8 +32,5 @@ export default class Variant implements IVariant {
 
     @Field()
     productId: string;
-
-    @Field(() => [Item], { defaultValue: [] })
-    items: Item[];
 }
 

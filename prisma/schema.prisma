@@ -40,10 +40,8 @@ model Variant {
   description String
   optionName  String
 
-  price        Float
-  stock        Int
-  committed    Int   @default(0)
-  availability Int   @default(0)
+  price Float
+  stock Int
 
   items Item[]
 }
