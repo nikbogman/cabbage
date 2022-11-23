@@ -1,7 +1,6 @@
-import { Global, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { PubSub } from "graphql-subscriptions";
 
-@Global()
 @Module({
     providers: [
         {
@@ -12,3 +11,14 @@ import { PubSub } from "graphql-subscriptions";
     exports: ['PUB_SUB'],
 })
 export class GlobalModule { }
+
+@Module({
+    providers: [
+        {
+            provide: 'PUB_SUB',
+            useValue: new PubSub(),
+        }
+    ],
+    exports: ['PUB_SUB'],
+})
+export class PubSubModule { }

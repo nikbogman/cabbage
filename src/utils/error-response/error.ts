@@ -1,12 +1,12 @@
 import { ObjectType, Field } from "@nestjs/graphql";
 
-export interface IFieldError {
+export interface IFieldedError {
     field: string;
     message: string;
 }
 
-@ObjectType()
-export class FieldError implements IFieldError {
+@ObjectType('FieldError')
+export class FieldedErrorType implements IFieldedError {
     @Field()
     field: string;
 
@@ -18,7 +18,7 @@ export const createFieldError = (field: string, message: string) => ({
     error: { field, message }
 })
 
-export class MyError extends Error implements IFieldError {
+export class FieldedError extends Error implements IFieldedError {
     constructor(public readonly field: string, public readonly message: string) {
         super(message);
     }

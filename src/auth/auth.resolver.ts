@@ -4,7 +4,7 @@ import { AuthInput } from './auth.type';
 import { AuthService } from './auth.service';
 import { Session, SessionType } from '../session';
 import { BooleanResponse } from '../utils/error-response/response';
-import { CartService } from 'src/cashier/cart/cart.service';
+import { CartService } from 'src/services/cart.service';
 
 @Resolver()
 export class AuthResolver {
@@ -32,11 +32,11 @@ export class AuthResolver {
   async logout(
     @Session() session: SessionType
   ) {
-    if (!await this.cartService.purgeCart(session))
-      return { data: false, error: { message: "Cart is already empthy", field: "session" } }
-    if (!await this.authService.logout(session))
-      return { data: false, error: { message: "User not logged in", field: "session" } }
-    session.destroy(err => { })
-    return { data: true }
+    // if (!await this.cartService.purgeCart(session))
+    //   return { data: false, error: { message: "Cart is already empthy", field: "session" } }
+    // if (!await this.authService.logout(session))
+    //   return { data: false, error: { message: "User not logged in", field: "session" } }
+    // session.destroy(err => { })
+    // return { data: true }
   }
 }
