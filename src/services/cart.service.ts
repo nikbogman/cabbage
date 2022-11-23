@@ -35,7 +35,6 @@ export class CartService {
         })
     }
 
-    // purges only by session id, maybe consider userId
     async deleteCart(sessionId: string) {
         return this.prisma.cart.delete({ where: { sessionId } });
     }

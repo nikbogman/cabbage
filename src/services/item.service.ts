@@ -5,8 +5,21 @@ import { PrismaService } from 'prisma/service';
 export class ItemService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async getItems(cartId: string) {
+    async getItemsOfCart(cartId: string) {
         return this.prisma.item.findMany({ where: { cartId } });
+    }
+
+    async getItemsOfVariant(variantId: string) {
+        return this.prisma.item.findMany({ where: { variantId } });
+    }
+
+    async getAvailabilityOfVariant(variantId: string) {
+        const items = await this.getItemsOfVariant(variantId);
+        let availability = 0;
+        for (let i = 0; i < items.length; i++) {
+            availability += items[i].quantity;
+        }
+        return availability;
     }
 
     async addItem(cartId: string, variantId: string, variantPrice: number, quantity: number) {

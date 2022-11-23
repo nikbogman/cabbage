@@ -1,7 +1,8 @@
 import { Inject } from '@nestjs/common';
-import { Resolver, ResolveField, Parent, Subscription } from '@nestjs/graphql';
+import { Resolver, ResolveField, Parent, Subscription, Args } from '@nestjs/graphql';
 
 import { PubSubEngine } from 'graphql-subscriptions';
+import { ItemService } from 'src/services/item.service';
 import { VariantService } from 'src/services/variant.service';
 import { Variant } from 'src/types/variant.type';
 import { CatalogBaseResolver } from '../utilities/catalog.resolver';
@@ -9,21 +10,22 @@ import { CatalogBaseResolver } from '../utilities/catalog.resolver';
 @Resolver(() => Variant)
 export class VariantResolver extends CatalogBaseResolver(Variant) {
    constructor(
+      private readonly itemService: ItemService,
       private readonly variantService: VariantService,
       @Inject('PUB_SUB') private readonly pubsub: PubSubEngine
    ) { super(variantService); }
 
    @ResolveField()
    async availability(@Parent() variant: Variant) {
-      // const items = await this.itemService.getItems(variant.id);
-      // let availability = 0;
-      // items.map(item => availability += item.quantity);
-      // return availability;
+      return this.itemService.getAvailabilityOfVariant(variant.id);
    }
 
-   @Subscription(() => Variant)
-   subscribeHere() {
-      return this.pubsub.asyncIterator('subscribeHere')
+   @Subscription(() => Variant, {
+      filter: (payload, variables) =>
+         payload.subscribeForVariant.id === variables.id,
+   })
+   subscribeForVariant(@Args('id') id: string) {
+      return this.pubsub.asyncIterator('subscribeForVariant')
    }
 }
 

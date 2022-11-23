@@ -12,7 +12,7 @@ export class ItemResolver {
   @Query(() => ItemsResponse)
   async getItems(@Session() session: SessionType) {
     if (session.cartId)
-      return { data: this.itemService.getItems(session.cartId) }
+      return { data: this.itemService.getItemsOfCart(session.cartId) }
     return {
       error: {
         path: "getItems",
