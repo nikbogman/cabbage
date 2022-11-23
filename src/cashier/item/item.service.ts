@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import Variant from '../../catalog/variant/variant.type';
 import { PrismaService } from 'prisma/service';
 
 @Injectable()
@@ -10,39 +9,42 @@ export class ItemService {
         return this.prisma.item.findMany({ where: { cartId } });
     }
 
-    async addItem(cartId: string, quantity: number, variant: Variant) {
-        const existingItem = variant.items.find(i => i.cartId === cartId);
-        if (!existingItem)
+    async addItem(cartId: string, variantId: string, variantPrice: number, quantity: number) {
+        const item = await this.prisma.item.findFirst({ where: { variantId, cartId } });
+        if (!item)
             return this.prisma.item.create({
                 data: {
                     cartId,
                     quantity,
-                    total: quantity * variant.price,
-                    variantId: variant.id
+                    total: quantity * variantPrice,
+                    variantId
                 }
             })
         return this.prisma.item.update({
-            where: { id: existingItem.id },
+            where: { id: item.id },
             data: {
-                quantity: existingItem.quantity + quantity,
-                total: existingItem.total + quantity * variant.price
+                quantity: item.quantity + quantity,
+                total: item.total + quantity * variantPrice
             }
         })
     }
 
-    async removeItem(cartId: string, quantity: number, variant: Variant) {
-        const existing = variant.items.find(i => i.cartId === cartId);
-        if (!existing)
-            throw new Error('No Item found')
-        if (existing.quantity - quantity === 0) {
-            return this.prisma.item.delete({ where: { id: existing.id } });
+    async removeItem(cartId: string, variantId: string, variantPrice: number, quantity: number) {
+        const item = await this.prisma.item.findFirst({ where: { variantId, cartId } });
+        if (!item) return undefined;
+        if (item.quantity - quantity === 0) {
+            return this.prisma.item.delete({ where: { id: item.id } });
         }
         return this.prisma.item.update({
-            where: { id: existing.id },
+            where: { id: item.id },
             data: {
-                quantity: existing.quantity - quantity,
-                total: existing.total - quantity * variant.price
+                quantity: item.quantity - quantity,
+                total: item.total - quantity * variantPrice
             }
         })
+    }
+
+    async purgeItems(cartId: string) {
+        return this.prisma.item.deleteMany({ where: { cartId } });
     }
 }

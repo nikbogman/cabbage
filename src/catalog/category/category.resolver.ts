@@ -5,5 +5,5 @@ import Category from './category.type';
 
 @Resolver(() => Category)
 export class CategoryResolver extends CatalogBaseResolver(Category) {
-  constructor(private readonly categoryService: CategoryService) { super(categoryService) }
+  constructor(private readonly categoryService: CategoryService) { super(categoryService); }
 }

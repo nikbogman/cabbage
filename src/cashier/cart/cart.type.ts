@@ -1,14 +1,9 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Cart as Model } from "@prisma/client";
 import { Response } from "../../utils/error-response";
-import Item from "../item/item.type";
-
-export interface ICart extends Model {
-    items: Item[]
-}
 
 @ObjectType()
-export default class Cart implements ICart {
+export default class Cart implements Model {
     @Field(type => ID)
     id: string;
 
@@ -18,8 +13,8 @@ export default class Cart implements ICart {
     @Field({ nullable: true })
     userId: string
 
-    @Field(type => [Item], { defaultValue: [] })
-    items: Item[];
+    @Field()
+    sessionId: string;
 }
 
 @ObjectType()

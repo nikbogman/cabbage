@@ -20,16 +20,16 @@ export class CartResolver {
 
 	@Query(() => Cart)
 	async getCart(@Session() session: SessionType) {
-		return this.cartService.getCart(session);
+		const cart = await this.cartService.getCart(session.id, session.userId);
+		session.total = cart.total;
+		return cart;
 	}
 
 	@Mutation(() => BooleanResponse)
-	async purgeCart(@Session() session: SessionType) {
-		const cartId = session.cartId;
-		const purged = await this.cartService.purgeCart(session)
-		if (purged) {
-			await this.cartService.deleteCart(cartId)
-			if (!session.userId) session.destroy(err => { })
+	async deleteCart(@Session() session: SessionType) {
+		const cart = await this.cartService.deleteCart(session.id)
+		if (cart) {
+			if (!session.userId) session.destroy(err => { console.error(err) })
 			return { data: true }
 		}
 		return { data: false, error: { message: "cart is empthy", field: "session" } }
@@ -43,14 +43,14 @@ export class CartResolver {
 	) {
 		try {
 			const [cart, variant] = await Promise.all([
-				this.cartService.getCart(session),
-				this.variantService.findBySlug(slug)
+				this.cartService.getCart(session.id, session.userId),
+				this.variantService.findBySlug(slug, { include: { items: true } })
 			])
 			const availability = this.variantService.getAvailability(variant);
 			if (availability - qty < 0)
 				return createFieldError('qty', 'Variant is not available to purchase at the moment')
 
-			await this.itemService.addItem(cart.id, qty, variant)
+			await this.itemService.addItem(cart.id, variant.id, variant.price, qty);
 			const updatedCart = this.cartService.updateCartTotal(session, variant.price * qty);
 			await this.pubsub.publish('subscribeHere', {
 				subscribeHere: variant
@@ -76,7 +76,7 @@ export class CartResolver {
 			if (availability + qty > variant.stock)
 				return createFieldError('qty', 'Quantity to remove is too much')
 
-			await this.itemService.removeItem(session.cartId, qty, variant)
+			await this.itemService.removeItem(session.cartId, variant.id, variant.price, qty);
 			const updatedCart = this.cartService.updateCartTotal(session, -(variant.price * qty));
 			return { data: updatedCart };
 		} catch (err) {

@@ -10,7 +10,7 @@ import { CashierModule } from './cashier/cashier.module';
 import { CatalogModule } from './catalog/catalog.module';
 
 import { PubSub } from "graphql-subscriptions";
-import { GlobalModule } from './utils/module';
+import { GlobalModule } from './utils/pubsub.module';
 
 @Module({
   imports: [

@@ -1,4 +1,4 @@
-import { Query, Resolver } from '@nestjs/graphql';
+import { Query, Resolver, Mutation } from '@nestjs/graphql';
 import { SessionType, Session } from '../../session';
 import { ItemService } from './item.service';
 import Item from './item.type';
@@ -9,6 +9,11 @@ export class ItemResolver {
 
   @Query(() => [Item])
   async getItems(@Session() session: SessionType) {
-    return this.itemService.getItems(session.cartId)
+    return this.itemService.getItems(session.cartId);
+  }
+
+  @Mutation()
+  async purgeItems(@Session() session: SessionType) {
+    return this.itemService.purgeItems(session.id);
   }
 }

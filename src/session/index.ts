@@ -8,12 +8,6 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { env } from '../config';
 
 export interface MySessionData {
-    cart: {
-        id: string,
-        total: number
-        countOfItems: number
-    },
-    cartId: string;
     total: number;
     userId: string;
 }

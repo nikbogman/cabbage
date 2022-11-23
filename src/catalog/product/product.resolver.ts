@@ -5,5 +5,5 @@ import Product from './product.type';
 
 @Resolver(() => Product)
 export class ProductResolver extends CatalogBaseResolver(Product) {
-  constructor(private readonly productService: ProductService) { super(productService) }
+  constructor(private readonly productService: ProductService) { super(productService); }
 }
