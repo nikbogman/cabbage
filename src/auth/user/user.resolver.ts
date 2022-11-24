@@ -1,8 +1,9 @@
 import { Resolver, Query } from "@nestjs/graphql";
-import { SessionType, Session } from "../../session";
+import { SessionType } from "../../session/session.types";
 import { createFieldError } from "../../utils/error-response";
 import { UserService } from "./user.service";
 import { UserResponse } from "./user.type";
+import { Session } from "../../session/session.decorator";
 
 @Resolver()
 export class UserResolver {

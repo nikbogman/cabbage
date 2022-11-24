@@ -37,7 +37,8 @@ export class CartResolver {
 			return { data: true }
 		}
 		return {
-			data: false, error: {
+			data: false,
+			error: {
 				path: "deleteCart",
 				issue: "session",
 				message: "Cart is allready empthy"

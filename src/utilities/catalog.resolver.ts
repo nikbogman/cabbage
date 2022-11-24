@@ -26,8 +26,11 @@ export function CatalogBaseResolver<T extends Type<unknown>>(classRef: T): any {
             try {
                 const record = await this.service.findBySlug(slug);
                 if (!record) throw new FieldedError(path, 'slug argument', `${classRefName} with slug ${slug} not found`)
+                return { data: record }
             } catch (error) {
-                return FieldedError.throwError(path, 'unknown', error.message);
+                if (error instanceof FieldedError)
+                    return error.getFields()
+                return new FieldedError(path, 'unknown', error.message).getFields();
             }
         }
 
@@ -37,8 +40,11 @@ export function CatalogBaseResolver<T extends Type<unknown>>(classRef: T): any {
             try {
                 const record = await this.service.findById(id);
                 if (!record) throw new FieldedError(path, 'slug argument', `${classRefName} with slug ${id} not found`)
+                return { data: record }
             } catch (error) {
-                return FieldedError.throwError(path, 'unknown', error.message);
+                if (error instanceof FieldedError)
+                    return error.getFields()
+                return new FieldedError(path, 'unknown', error.message).getFields();
             }
         }
     }

@@ -21,12 +21,6 @@ export class FieldedError extends Error {
     getFields(): { error: IFieldedError } {
         return { error: { path: this.path, issue: this.issue, message: this.message } }
     }
-
-    static throwError(path: string, issue: string, error: any) {
-        if (error instanceof FieldedError)
-            return error.getFields();
-        return new FieldedError(path, issue, error.message).getFields();
-    }
 }
 
 @ObjectType('FieldedError')

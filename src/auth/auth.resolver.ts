@@ -2,9 +2,10 @@ import { Args, Resolver, Mutation, Query } from '@nestjs/graphql';
 import { UserResponse } from './user/user.type';
 import { AuthInput } from './auth.type';
 import { AuthService } from './auth.service';
-import { Session, SessionType } from '../session';
+import { SessionType } from 'src/session/session.types';
 import { BooleanResponse } from '../utils/error-response/response';
 import { CartService } from 'src/services/cart.service';
+import { Session } from 'src/session/session.decorator';
 
 @Resolver()
 export class AuthResolver {

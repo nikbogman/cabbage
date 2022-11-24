@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { PrismaService } from '../prisma/service';
-import { sessionMiddleware } from './session';
+import { sessionMiddleware } from './session/session.middleware';
 import { env } from './config';
 
 async function bootstrap() {

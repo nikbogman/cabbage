@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 import * as shortid from 'shortid';
 
 import { createFieldError } from '../utils/error-response';
-import { SessionType } from '../session';
+import { SessionType } from '../session/session.types';
 
 @Injectable()
 export class AuthService {
