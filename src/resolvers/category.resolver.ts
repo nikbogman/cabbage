@@ -1,6 +1,6 @@
 import { Resolver } from '@nestjs/graphql';
-import { CategoryService } from 'src/services/category.service';
-import { Category } from 'src/types/category.type';
+import { CategoryService } from '../services/category.service';
+import { Category } from '../types/category.type';
 import { CatalogBaseResolver } from '../utilities/catalog.resolver';
 
 

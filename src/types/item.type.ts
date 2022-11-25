@@ -20,5 +20,5 @@ export class Item implements Model {
     quantity: number;
 }
 
-@ObjectType()
-export class ItemsResponse extends Response(Array<Item>) { }
+// @ObjectType() // gives error
+// export class ItemsResponse extends Response(Array<Item>) { }

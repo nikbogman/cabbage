@@ -1,6 +1,6 @@
 import { Resolver } from '@nestjs/graphql';
-import { ProductService } from 'src/services/product.service';
-import { Product } from 'src/types/product.type';
+import { ProductService } from '../services/product.service';
+import { Product } from '../types/product.type';
 import { CatalogBaseResolver } from '../utilities/catalog.resolver';
 
 @Resolver(() => Product)

@@ -4,11 +4,11 @@ import { SessionType } from '../session/session.types';
 
 import { Inject } from '@nestjs/common';
 import { PubSubEngine } from 'graphql-subscriptions';
-import { CartService } from 'src/services/cart.service';
-import { ItemService } from 'src/services/item.service';
-import { VariantService } from 'src/services/variant.service';
-import { CartResponse } from 'src/types/cart.type';
-import { FieldedError } from 'src/utilities/error';
+import { CartService } from '../services/cart.service';
+import { ItemService } from '../services/item.service';
+import { VariantService } from '../services/variant.service';
+import { CartResponse } from '../types/cart.type';
+import { FieldedError } from '../utilities/error';
 
 @Resolver()
 export class CashierResolver {
@@ -50,7 +50,7 @@ export class CashierResolver {
         } catch (error) {
             if (error instanceof FieldedError)
                 return error.getFields();
-            return new FieldedError(path, 'unknown', error.message)
+            return new FieldedError(path, 'unknown', error.message).getFields()
         }
     }
 
@@ -80,7 +80,7 @@ export class CashierResolver {
         } catch (error) {
             if (error instanceof FieldedError)
                 return error.getFields();
-            return new FieldedError(path, 'unknown', error.message)
+            return new FieldedError(path, 'unknown', error.message).getFields()
         }
     }
 }

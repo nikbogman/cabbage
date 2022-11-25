@@ -5,8 +5,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { gqlSchemaFile as autoSchemaFile } from './config';
 import { PrismaService } from '../prisma/service';
 
-import { AuthModule } from './auth/auth.module';
-import { CatalogModule } from './modules/#catalog.module';
+import { CatalogModule } from './modules/catalog.module';
 import { CashierModule } from './modules/cashier.module';
 
 import { GlobalModule } from './utils/pubsub.module';
@@ -21,7 +20,9 @@ import { GlobalModule } from './utils/pubsub.module';
       context: ({ req }) => ({ req })
     }),
     GlobalModule,
-    AuthModule, CatalogModule, CashierModule],
+    CatalogModule,
+    CashierModule
+  ],
   providers: [PrismaService]
 })
 export class AppModule { }

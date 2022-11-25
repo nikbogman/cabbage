@@ -2,9 +2,9 @@ import { Inject } from '@nestjs/common';
 import { Resolver, ResolveField, Parent, Subscription, Args } from '@nestjs/graphql';
 
 import { PubSubEngine } from 'graphql-subscriptions';
-import { ItemService } from 'src/services/item.service';
-import { VariantService } from 'src/services/variant.service';
-import { Variant } from 'src/types/variant.type';
+import { ItemService } from '../services/item.service';
+import { VariantService } from '../services/variant.service';
+import { Variant } from '../types/variant.type';
 import { CatalogBaseResolver } from '../utilities/catalog.resolver';
 
 @Resolver(() => Variant)
