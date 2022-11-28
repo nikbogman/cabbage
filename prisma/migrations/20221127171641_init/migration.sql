@@ -33,8 +33,6 @@ CREATE TABLE `Variant` (
     `optionName` VARCHAR(191) NOT NULL,
     `price` DOUBLE NOT NULL,
     `stock` INTEGER NOT NULL,
-    `committed` INTEGER NOT NULL DEFAULT 0,
-    `availability` INTEGER NOT NULL DEFAULT 0,
 
     UNIQUE INDEX `Variant_slug_key`(`slug`),
     UNIQUE INDEX `Variant_name_key`(`name`),
@@ -46,8 +44,10 @@ CREATE TABLE `Cart` (
     `id` VARCHAR(191) NOT NULL,
     `total` DOUBLE NOT NULL DEFAULT 0,
     `userId` VARCHAR(191) NULL,
+    `sessionId` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `Cart_userId_key`(`userId`),
+    UNIQUE INDEX `Cart_sessionId_key`(`sessionId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -106,6 +106,9 @@ ALTER TABLE `Variant` ADD CONSTRAINT `Variant_productId_fkey` FOREIGN KEY (`prod
 
 -- AddForeignKey
 ALTER TABLE `Cart` ADD CONSTRAINT `Cart_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Cart` ADD CONSTRAINT `Cart_sessionId_fkey` FOREIGN KEY (`sessionId`) REFERENCES `Session`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Item` ADD CONSTRAINT `Item_variantId_fkey` FOREIGN KEY (`variantId`) REFERENCES `Variant`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

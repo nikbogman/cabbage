@@ -10,15 +10,4 @@ import { PubSub } from "graphql-subscriptions";
     ],
     exports: ['PUB_SUB'],
 })
-export class GlobalModule { }
-
-@Module({
-    providers: [
-        {
-            provide: 'PUB_SUB',
-            useValue: new PubSub(),
-        }
-    ],
-    exports: ['PUB_SUB'],
-})
 export class PubSubModule { }

@@ -8,7 +8,7 @@ import { PrismaService } from '../prisma/service';
 import { CatalogModule } from './modules/catalog.module';
 import { CashierModule } from './modules/cashier.module';
 
-import { GlobalModule } from './utils/pubsub.module';
+import { createContext } from './utilities/resolver-context';
 
 @Module({
   imports: [
@@ -17,9 +17,8 @@ import { GlobalModule } from './utils/pubsub.module';
       playground: true,
       installSubscriptionHandlers: true,
       autoSchemaFile,
-      context: ({ req }) => ({ req })
+      context: ({ req, res }) => createContext(req, res)
     }),
-    GlobalModule,
     CatalogModule,
     CashierModule
   ],

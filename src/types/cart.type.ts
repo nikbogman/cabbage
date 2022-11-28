@@ -14,7 +14,7 @@ export class Cart implements Model {
     userId: string
 
     @Field()
-    sessionId: string;
+    expiresAt: Date;
 }
 
 @ObjectType()

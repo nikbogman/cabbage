@@ -5,37 +5,32 @@ import { PrismaService } from 'prisma/service';
 export class CartService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async getCart(sessionId: string, userId: string) {
+    async getCart(id: string, userId: string) {
+        const expiresAt = new Date(Date.now() + 4000)
         if (userId) {
-            return await this.prisma.cart.upsert({
+            return this.prisma.cart.upsert({
                 where: { userId },
-                update: { sessionId },
-                create: { userId, sessionId },
+                update: {},
+                create: { userId, expiresAt },
                 include: { items: true }
             })
         }
-        const cart = await this.prisma.cart.findUnique({
-            where: { sessionId },
+        return this.prisma.cart.upsert({
+            where: { id }, update: {},
+            create: { userId, expiresAt },
             include: { items: true }
-        })
-        if (!cart) {
-            return this.prisma.cart.create({
-                data: { sessionId },
-                include: { items: true }
-            })
-        }
-        return cart;
+        });
     }
 
-    async updateCartTotal(sessionId: string, newTotal: number) {
+    async updateCart(id: string, newTotal: number) {
         return this.prisma.cart.update({
-            where: { sessionId },
+            where: { id },
             data: { total: newTotal },
             include: { items: true }
         })
     }
 
-    async deleteCart(sessionId: string) {
-        return this.prisma.cart.delete({ where: { sessionId } });
+    async deleteCart(id: string) {
+        return this.prisma.cart.delete({ where: { id } });
     }
 }

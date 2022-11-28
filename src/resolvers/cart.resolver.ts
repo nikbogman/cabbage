@@ -1,48 +1,50 @@
-import { Resolver, Query, Mutation } from '@nestjs/graphql';
-import { BooleanResponse } from '../utilities/boolean.response';
-import { Session } from '@nestjs/common';
+import { Context, Resolver, Query, Mutation } from '@nestjs/graphql';
+import { CartCookie } from 'src/cookie/cookie.type';
+import { Cart } from 'src/types/cart.type';
+import { BooleanResponse } from 'src/utilities/boolean.response';
+import { MyContextType } from 'src/utilities/resolver-context';
 import { CartService } from '../services/cart.service';
-import { SessionType } from '../session/session.types';
-import { Cart } from '../types/cart.type';
 
 @Resolver()
 export class CartResolver {
 	constructor(private readonly cartService: CartService) { }
 
 	@Query(() => Cart)
-	async getCart(@Session() session: SessionType) {
-		const cart = await this.cartService.getCart(session.id, session.userId);
-		session.total = cart.total;
-		session.cartId = cart.id;
+	async getCart(@Context() ctx: MyContextType) {
+		const cartCookie: CartCookie = ctx.cookies.get("cart");
+		const userId: string = ctx.cookies.get("user-id");
+		let cart = await this.cartService.getCart(cartCookie.id, userId);
+
+		ctx.cookies.set("cart", {
+			id: cart.id,
+			total: cart.total
+		});
+
 		return cart;
 	}
 
 	@Mutation(() => BooleanResponse)
-	async deleteCart(@Session() session: SessionType) {
-		const cart = await this.cartService.deleteCart(session.id);
-		if (cart) {
-			if (!session.userId) {
-				session.destroy((err: Error) => {
-					if (err) return {
-						data: false, error: {
-							path: "deleteCart",
-							issue: "unknown",
-							message: err.message
-						}
-					}
-				})
-			}
-			session.cartId = undefined;
-			return { data: true }
-		}
-		return {
+	async deleteCart(@Context() ctx: MyContextType) {
+		const cartCookie: CartCookie = ctx.cookies.get("cart");
+		if (!cartCookie.id) return {
 			data: false,
 			error: {
 				path: "deleteCart",
-				issue: "session",
+				issue: "cookie",
 				message: "Cart is allready empthy"
 			}
 		}
-	}
 
+		const cart = await this.cartService.deleteCart(cartCookie.id);
+		if (!cart) return {
+			data: false,
+			error: {
+				path: "deleteCart",
+				issue: "cookie",
+				message: "Cart not found"
+			}
+		}
+		ctx.res.clearCookie("cart");
+		return { data: true }
+	}
 }

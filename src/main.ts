@@ -1,13 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { PrismaService } from '../prisma/service';
-import { sessionMiddleware } from './session/session.middleware';
+import * as cookieParser from 'cookie-parser';
 import { env } from './config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const prismaClient = app.get(PrismaService)
-  app.use(sessionMiddleware(prismaClient))
+  app.use(cookieParser());
   await app.listen(env.port);
 }
 bootstrap();

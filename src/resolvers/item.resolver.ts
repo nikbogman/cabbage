@@ -1,7 +1,5 @@
-import { Query, Resolver, Mutation } from '@nestjs/graphql';
-import { Session } from '../session/session.decorator';
+import { Query, Resolver, Mutation, Args } from '@nestjs/graphql';
 import { ItemService } from '../services/item.service';
-import { SessionType } from '../session/session.types';
 
 
 @Resolver()
@@ -14,8 +12,8 @@ export class ItemResolver {
   // mutation to purge items
 
 
-  // // rethink items as subscription
-  // @Query(() => ItemsResponse)
+  // rethink items as subscription
+  // @Mutation()
   // async getItems(@Session() session: SessionType) {
   //   if (session.cartId) {
   //     const items = await this.itemService.getItemsOfCart(session.cartId);
@@ -30,7 +28,7 @@ export class ItemResolver {
   //   }
   // }
 
-  // @Mutation(() => ItemsResponse)
+  // @Mutation()
   // async purgeItems(@Session() session: SessionType) {
   //   if (session.cartId) {
   //     const deleteManyPayload = await this.itemService.purgeItems(session.cartId);
@@ -44,5 +42,8 @@ export class ItemResolver {
   //     }
   //   }
   // }
+
+  // remove item from cart by id
+  // add item to cart by id
 }
 

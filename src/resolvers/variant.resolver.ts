@@ -16,16 +16,17 @@ export class VariantResolver extends CatalogBaseResolver(Variant) {
    ) { super(variantService); }
 
    @ResolveField()
-   async availability(@Parent() variant: Variant) {
-      return this.itemService.getAvailabilityOfVariant(variant.id);
+   async availability(@Parent() parent: Variant) {
+      const taken = await this.itemService.getAvailabilityOfVariant(parent.id);
+      return parent.stock - taken;
    }
 
    @Subscription(() => Variant, {
       filter: (payload, variables) =>
-         payload.subscribeForVariant.id === variables.id,
+         payload.variantSubscription.id === variables.id,
    })
-   subscribeForVariant(@Args('id') id: string) {
-      return this.pubsub.asyncIterator('subscribeForVariant')
+   variantSubscription(@Args('id') id: string) {
+      return this.pubsub.asyncIterator('variantSubscription')
    }
 }
 
