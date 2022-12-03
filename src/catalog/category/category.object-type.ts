@@ -15,4 +15,3 @@ export class Category implements Model {
     @Field()
     description: string;
 }
-

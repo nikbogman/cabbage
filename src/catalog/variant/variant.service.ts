@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/service';
-import { Variant } from 'src/types/variant.type';
-import { CatalogBaseService } from '../utilities/catalog.service';
+import { CatalogBaseService } from '../catalog.service';
+import { Variant } from './variant.object-type';
 
 @Injectable()
 export class VariantService extends CatalogBaseService(Variant) {

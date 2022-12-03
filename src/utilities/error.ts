@@ -7,19 +7,13 @@ export interface IFieldedError {
 }
 
 export class FieldedError extends Error {
-    readonly path: string;
     readonly issue: string;
     readonly message: string;
 
-    constructor(path: string, issue: string, message: string) {
+    constructor(issue: string, message: string) {
         super(message);
-        this.path = path;
         this.issue = issue;
         this.message = message;
-    }
-
-    getFields(): { error: IFieldedError } {
-        return { error: { path: this.path, issue: this.issue, message: this.message } }
     }
 }
 

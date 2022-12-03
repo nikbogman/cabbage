@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Item as Model } from "@prisma/client";
-import { Response } from "src/utilities/response";
 
 @ObjectType()
 export class Item implements Model {
@@ -20,5 +19,3 @@ export class Item implements Model {
     quantity: number;
 }
 
-// @ObjectType() // gives error
-// export class ItemsResponse extends Response(Array<Item>) { }

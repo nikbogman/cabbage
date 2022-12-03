@@ -9,10 +9,10 @@ export function CatalogBaseService<T extends Type<unknown>>(classRef: T): any {
             return this.prisma[model].findMany(options);
         }
         async findById(id: string, options?: object): Promise<T> {
-            return this.prisma[model].findUniqueOrThrow({ where: { id }, ...options });
+            return this.prisma[model].findUnique({ where: { id }, ...options });
         }
         async findBySlug(slug: string, options?: object): Promise<T> {
-            return this.prisma[model].findUniqueOrThrow({ where: { slug }, ...options });
+            return this.prisma[model].findUnique({ where: { slug }, ...options });
         }
     }
     return BaseService;

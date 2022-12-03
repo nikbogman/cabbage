@@ -1,13 +1,14 @@
 import { Type } from '@nestjs/common';
 import { Args, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { plural } from 'pluralize';
-import { FieldedError } from './error';
 import { Response } from './response';
 
 export function CatalogBaseResolver<T extends Type<unknown>>(classRef: T): any {
 
+    type arr = Array<InstanceType<typeof classRef>>
     const classRefName = classRef.name;
-
+    // @ObjectType(classRefName + 'Response')
+    // class classRefResponse extends Response(classRef) { }
 
     @Resolver({ isAbstract: true })
     abstract class BaseResolverHost {
@@ -20,10 +21,8 @@ export function CatalogBaseResolver<T extends Type<unknown>>(classRef: T): any {
 
         @Query(() => classRef, { name: `find${classRefName}BySlug` })
         async findBySlug(@Args('slug') slug: string) {
-            const path = `find${classRefName}BySlug`;
             const record = await this.service.findBySlug(slug);
-            return record
-
+            return { data: record };
         }
 
         @Query(() => classRef, { name: `find${classRefName}ById` })
