@@ -9,11 +9,14 @@ import { MyContextType } from 'src/utilities/resolver-context';
 import { Cart, CartResponse } from './cart.object-type';
 import { CartService } from './cart.service';
 import { ItemService } from './item/item.service';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import Redis from 'ioredis';
 
 @Resolver()
 export class CartResolver {
     constructor(
         @Inject('PUB_SUB') private readonly pubsub: PubSubEngine,
+        @InjectRedis() private readonly redis: Redis,
         private readonly cartService: CartService,
         private readonly itemService: ItemService,
         private readonly variantService: VariantService
@@ -37,6 +40,7 @@ export class CartResolver {
         const cartCookie: CartCookie = ctx.cookies.get("cart");
         if (!cartCookie.id) throw new FieldedError("cookie header", "Cart is allready empthy");
 
+        // set variants to redis
         const cart = await this.cartService.deleteCart(cartCookie.id);
         if (!cart) throw new FieldedError("cookie header", "Cart not found")
         ctx.res.clearCookie("cart");
@@ -53,7 +57,7 @@ export class CartResolver {
         const userId: string = ctx.cookies.get("user-id");
         const id = cartCookie !== undefined ? cartCookie.id : "";
         const cart = await this.cartService.getCart(id, userId);
-
+        // get from redis
         const variant = await this.variantService.findBySlug(slug, { include: { items: true } })
         if (!variant) throw new FieldedError('slug argument', `Variant with slug ${slug} not found`)
 
@@ -68,6 +72,7 @@ export class CartResolver {
         await this.pubsub.publish('variantSubscription', { variantSubscription: variant })
         await this.pubsub.publish('itemSubscription', { itemSubscription: {} })
 
+        // set in redis
         ctx.cookies.set("cart", {
             total: newTotal,
             id: cart.id
@@ -86,6 +91,7 @@ export class CartResolver {
         if (!cartCookie.id)
             throw new FieldedError('cookie', 'Cart already empty')
 
+        // get from redis
         const variant = await this.variantService.findBySlug(slug, { include: { items: true } });
         if (!variant)
             throw new FieldedError('slug argument', `Variant with slug ${slug} not found`)
@@ -105,6 +111,7 @@ export class CartResolver {
             id: updated.id
         });
 
+        // set to redis
         return { data: updated };
 
     }

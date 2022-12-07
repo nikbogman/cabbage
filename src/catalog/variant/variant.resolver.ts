@@ -6,19 +6,22 @@ import { ItemService } from 'src/cart/item/item.service';
 import { CatalogBaseResolver } from '../catalog.resolver';
 import { Variant } from './variant.object-type';
 import { VariantService } from './variant.service';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import Redis from 'ioredis';
 
 @Resolver(() => Variant)
 export class VariantResolver extends CatalogBaseResolver(Variant) {
     constructor(
         private readonly itemService: ItemService,
         private readonly variantService: VariantService,
-        @Inject('PUB_SUB') private readonly pubsub: PubSubEngine
+        @Inject('PUB_SUB') private readonly pubsub: PubSubEngine,
+        @InjectRedis() private readonly redis: Redis
     ) { super(variantService); }
 
     @ResolveField()
     async availability(@Parent() parent: Variant) {
-        const taken = await this.itemService.getAvailabilityOfVariant(parent.id);
-        return parent.stock - taken;
+        const taken = await this.redis.get(parent.id) || "0";
+        return parent.stock - parseInt(taken);
     }
 
     @Subscription(() => Variant, {

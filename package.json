@@ -21,6 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@liaoliaots/nestjs-redis": "^9.0.4",
     "@nestjs/apollo": "^10.0.22",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
@@ -37,6 +38,7 @@
     "express-session": "^1.17.3",
     "graphql": "^16.6.0",
     "graphql-subscriptions": "^2.0.0",
+    "ioredis": "^5.2.4",
     "pluralize": "^8.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

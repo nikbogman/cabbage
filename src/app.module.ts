@@ -4,9 +4,10 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { PrismaService } from '../prisma/service';
+import { RedisModule, RedisModuleOptions } from '@liaoliaots/nestjs-redis';
 
 import { CatalogModule } from './catalog/catalog.module';
 import { CartModule } from './cart/cart.module';
@@ -39,6 +40,18 @@ function parseCookies(cookies) {
                 port: parseInt(process.env.PORT, 10) || 3000,
                 secret: process.env.SECRET
             })]
+        }),
+        RedisModule.forRootAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: async (configService: ConfigService): Promise<RedisModuleOptions> => {
+                return {
+                    config: {
+                        host: 'localhost',
+                        port: 6379,
+                    }
+                };
+            }
         }),
         GraphQLModule.forRoot<ApolloDriverConfig>({
             driver: ApolloDriver,
