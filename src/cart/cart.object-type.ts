@@ -17,5 +17,6 @@ export class Cart implements Model {
     expiresAt: Date;
 }
 
+
 @ObjectType()
 export class CartResponse extends Response(Cart) { }

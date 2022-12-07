@@ -6,4 +6,5 @@ import { Product } from './product.object-type';
 @Injectable()
 export class ProductService extends CatalogBaseService(Product) {
     constructor(private readonly prisma: PrismaService) { super(prisma) }
+    // findProductsByCategory
 }

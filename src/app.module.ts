@@ -1,14 +1,17 @@
+import * as path from 'path';
+
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
-import { gqlSchemaFile as autoSchemaFile } from './config';
-import { PrismaService } from '../prisma/service';
+import { ConfigModule } from '@nestjs/config';
 
-import { createContext } from './utilities/resolver-context';
+import { PrismaService } from '../prisma/service';
 
 import { CatalogModule } from './catalog/catalog.module';
 import { CartModule } from './cart/cart.module';
+
+import { createContext } from './utilities/resolver-context';
 
 function parseCookies(cookies) {
     const list = {}
@@ -30,10 +33,17 @@ function parseCookies(cookies) {
 
 @Module({
     imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+            load: [() => ({
+                port: parseInt(process.env.PORT, 10) || 3000,
+                secret: process.env.SECRET
+            })]
+        }),
         GraphQLModule.forRoot<ApolloDriverConfig>({
             driver: ApolloDriver,
             playground: true,
-            autoSchemaFile,
+            autoSchemaFile: path.join(process.cwd(), 'graphql/schema.gql'),
             subscriptions: {
                 'subscriptions-transport-ws': {
                     //connectionParams: Object, webSocket: WebSocket, context

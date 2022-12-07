@@ -1,34 +1,37 @@
 import { Type } from '@nestjs/common';
 import { Args, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { plural } from 'pluralize';
-import { Response } from './response';
+import { ArrayResponse, Response } from 'src/utilities/response';
 
 export function CatalogBaseResolver<T extends Type<unknown>>(classRef: T): any {
-
-    type arr = Array<InstanceType<typeof classRef>>
     const classRefName = classRef.name;
-    // @ObjectType(classRefName + 'Response')
-    // class classRefResponse extends Response(classRef) { }
+
+    @ObjectType(`${plural(classRefName)}Response`)
+    class classRefResponses extends ArrayResponse(classRef) { }
+
+    @ObjectType(`${classRefName}Response`)
+    class classRefResponse extends Response(classRef) { }
+
 
     @Resolver({ isAbstract: true })
     abstract class BaseResolverHost {
         constructor(private readonly service) { }
 
-        @Query(() => [classRef], { name: `findAll${plural(classRefName)}` })
+        @Query(() => classRefResponses, { name: `findAll${plural(classRefName)}` })
         async findAll() {
-            return this.service.findAll();
+            return { data: await this.service.findAll() };
         }
 
-        @Query(() => classRef, { name: `find${classRefName}BySlug` })
+        @Query(() => classRefResponse, { name: `find${classRefName}BySlug` })
         async findBySlug(@Args('slug') slug: string) {
             const record = await this.service.findBySlug(slug);
             return { data: record };
         }
 
-        @Query(() => classRef, { name: `find${classRefName}ById` })
+        @Query(() => classRefResponse, { name: `find${classRefName}ById` })
         async findById(@Args('id') id: string) {
             const record = await this.service.findById(id);
-            return record;
+            return { data: record };
         }
     }
     return BaseResolverHost;

@@ -1,5 +1,7 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Variant as Model } from "@prisma/client";
+import { FieldedErrorObjectType, IFieldedError } from "src/utilities/error";
+import { ArrayResponse, Response } from "src/utilities/response";
 
 @ObjectType()
 export class Variant implements Model {
@@ -27,7 +29,6 @@ export class Variant implements Model {
     @Field()
     productId: string;
 
-    //
     @Field()
     committed: number;
 
@@ -35,3 +36,8 @@ export class Variant implements Model {
     availability: number;
 }
 
+@ObjectType()
+export class VariantsResponse extends ArrayResponse(Variant) { }
+
+@ObjectType()
+export class VariantResponse extends Response(Variant) { }
