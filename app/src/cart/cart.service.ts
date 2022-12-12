@@ -6,7 +6,7 @@ export class CartService {
     constructor(private readonly prisma: PrismaService) { }
 
     async getCart(id: string, userId: string) {
-        const expiresAt = new Date(Date.now() + 4000)
+        const expiresAt = new Date(Date.now() + 600)
         if (userId) {
             return this.prisma.cart.upsert({
                 where: { userId },

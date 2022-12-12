@@ -57,7 +57,9 @@ export class CartResolver {
         const userId: string = ctx.cookies.get("user-id");
         const id = cartCookie !== undefined ? cartCookie.id : "";
         const cart = await this.cartService.getCart(id, userId);
+        
         // get from redis
+        // need availability and price 
         const variant = await this.variantService.findBySlug(slug, { include: { items: true } })
         if (!variant) throw new FieldedError('slug argument', `Variant with slug ${slug} not found`)
 

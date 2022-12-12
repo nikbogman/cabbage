@@ -12,7 +12,6 @@ export function CatalogBaseResolver<T extends Type<unknown>>(classRef: T): any {
     @ObjectType(`${classRefName}Response`)
     class classRefResponse extends Response(classRef) { }
 
-
     @Resolver({ isAbstract: true })
     abstract class BaseResolverHost {
         constructor(private readonly service) { }
