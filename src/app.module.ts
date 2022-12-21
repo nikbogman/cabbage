@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { CacheModule, Module } from '@nestjs/common';
+import { CacheModule, Module, OnApplicationBootstrap } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
@@ -13,6 +13,7 @@ import { CartModule } from './cart/cart.module';
 
 import { createContext } from './utilities/resolver-context';
 import parseCookies from './utilities/parse-websocket-cookies';
+import { StartService } from './start.service';
 
 @Module({
     imports: [
@@ -54,6 +55,7 @@ import parseCookies from './utilities/parse-websocket-cookies';
         CatalogModule,
         CartModule,
     ],
-    providers: [PrismaService]
+    providers: [PrismaService, StartService]
 })
+
 export class AppModule { }

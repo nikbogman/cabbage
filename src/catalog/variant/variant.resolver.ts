@@ -11,7 +11,6 @@ import { ItemService } from '../../cart/item/item.service';
 export class VariantResolver extends CatalogBaseResolver(Variant) {
     constructor(
         private readonly itemService: ItemService,
-
         private readonly variantService: VariantService,
         @Inject('PUB_SUB') private readonly pubsub: PubSubEngine,
         @Inject(CACHE_MANAGER) private cacheManager: Cache
