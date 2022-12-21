@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { CACHE_MANAGER, Inject } from '@nestjs/common';
 import { Context, Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { PubSubEngine } from 'graphql-subscriptions';
 import { VariantService } from 'src/catalog/variant/variant.service';
@@ -9,14 +9,13 @@ import { MyContextType } from 'src/utilities/resolver-context';
 import { Cart, CartResponse } from './cart.object-type';
 import { CartService } from './cart.service';
 import { ItemService } from './item/item.service';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
-import Redis from 'ioredis';
+import { Cache } from 'cache-manager';
 
 @Resolver()
 export class CartResolver {
     constructor(
         @Inject('PUB_SUB') private readonly pubsub: PubSubEngine,
-        @InjectRedis() private readonly redis: Redis,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache,
         private readonly cartService: CartService,
         private readonly itemService: ItemService,
         private readonly variantService: VariantService
@@ -57,12 +56,10 @@ export class CartResolver {
         const userId: string = ctx.cookies.get("user-id");
         const id = cartCookie !== undefined ? cartCookie.id : "";
         const cart = await this.cartService.getCart(id, userId);
-        
-        // get from redis
-        // need availability and price 
+
         const variant = await this.variantService.findBySlug(slug, { include: { items: true } })
         if (!variant) throw new FieldedError('slug argument', `Variant with slug ${slug} not found`)
-
+        // console.log(variant) // we dont know the availablity
         if (variant.availability - qty < 0)
             throw new FieldedError(
                 'qty argument', 'Variant is not available to purchase at the moment')
@@ -74,7 +71,6 @@ export class CartResolver {
         await this.pubsub.publish('variantSubscription', { variantSubscription: variant })
         await this.pubsub.publish('itemSubscription', { itemSubscription: {} })
 
-        // set in redis
         ctx.cookies.set("cart", {
             total: newTotal,
             id: cart.id

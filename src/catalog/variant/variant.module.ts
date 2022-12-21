@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { PrismaService } from 'prisma/service';
 import { ItemModule } from 'src/cart/item/item.module';
 import { ItemService } from 'src/cart/item/item.service';
