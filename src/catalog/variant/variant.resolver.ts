@@ -10,19 +10,9 @@ import { ItemService } from '../../cart/item/item.service';
 @Resolver(() => Variant)
 export class VariantResolver extends CatalogBaseResolver(Variant) {
     constructor(
-        private readonly itemService: ItemService,
         private readonly variantService: VariantService,
         @Inject('PUB_SUB') private readonly pubsub: PubSubEngine,
-        @Inject(CACHE_MANAGER) private cacheManager: Cache
     ) { super(variantService); }
-
-    @ResolveField()
-    async availability(@Parent() parent: Variant) {
-        // const taken = await this.cacheManager.get<number>(parent.id);
-        // return taken ? parent.stock - taken : parent.stock;
-        const taken = await this.itemService.getAvailabilityOfVariant(parent.id);
-        return parent.stock - taken;
-    }
 
     @Subscription(() => Variant, {
         filter: (payload, variables) =>

@@ -4,7 +4,7 @@ import { CacheModule, Module, OnApplicationBootstrap } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 
 import { PrismaService } from '../prisma/service';
 
@@ -13,14 +13,11 @@ import { CartModule } from './cart/cart.module';
 
 import { createContext } from './utilities/resolver-context';
 import parseCookies from './utilities/parse-websocket-cookies';
-import { StartService } from './start.service';
 
 @Module({
     imports: [
+        // migrate to sqlite
         CacheModule.register({
-            store: require('cache-manager-redis-yet'),
-            host: 'localhost',
-            port: 6379,
             isGlobal: true,
         }),
         // probably remove configservice in the fucture because ot is pointless
@@ -29,10 +26,6 @@ import { StartService } from './start.service';
             load: [() => ({
                 port: parseInt(process.env.PORT, 10) || 3000,
                 secret: process.env.SECRET,
-                redis: {
-                    host: process.env.REDIS_HOST || "127.0.0.1",
-                    port: parseInt(process.env.PORT, 10) || 6739
-                }
             })]
         }),
         GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -44,18 +37,20 @@ import { StartService } from './start.service';
                 credentials: true,
             },
             subscriptions: {
+                // switch to graphql-ws
                 'subscriptions-transport-ws': {
-                    onConnect: (_, extra) => ({
-                        cookies: parseCookies(extra.upgradeReq.headers.cookie)
-                    }),
+                    onConnect: (_, extra) => {
+                        const CookieHeader: string = extra.upgradeReq.headers.cookie;
+                        return { cookies: CookieHeader ? parseCookies(extra.upgradeReq.headers.cookie) : '' }
+                    },
                 }
             },
-            context: ({ req, res }) => createContext(req, res),
+            context: (ctx) => createContext(ctx),
         }),
         CatalogModule,
         CartModule,
     ],
-    providers: [PrismaService, StartService]
+    providers: [PrismaService]
 })
 
 export class AppModule { }

@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
 
-export function createContext(req: Request, res: Response) {
+interface HttpContext {
+    req: Request,
+    res: Response
+}
+
+export function createContext(httpCtx: HttpContext) {
     const cookies = {
-        get: (key: string) => req.cookies[key],
-        set: (key: string, value: any) => res.cookie(key, value,
+        get: (key: string) => httpCtx.req.cookies[key],
+        set: (key: string, value: any) => httpCtx.res.cookie(key, value,
             {
                 //     maxAge: 600,
                 //     expires: new Date(Date.now() + 600),
@@ -13,7 +18,7 @@ export function createContext(req: Request, res: Response) {
             }
         )
     }
-    return { req, res, cookies }
+    return { httpCtx, cookies }
 }
 
 export type MyContextType = ReturnType<typeof createContext>;

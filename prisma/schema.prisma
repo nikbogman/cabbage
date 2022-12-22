@@ -37,6 +37,7 @@ model Variant {
   optionName  String
   price       Float
   stock       Int
+  available   Int     @default(0)
   items       Item[]
 }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/service';
-
+import { Prisma } from '@prisma/client';
 @Injectable()
 export class CartService {
     constructor(private readonly prisma: PrismaService) { }
@@ -30,7 +30,7 @@ export class CartService {
         })
     }
 
-    async deleteCart(id: string) {
-        return this.prisma.cart.delete({ where: { id } });
+    async deleteCart(id: string, includes?: Prisma.CartInclude) {
+        return this.prisma.cart.delete({ where: { id }, include: includes });
     }
 }

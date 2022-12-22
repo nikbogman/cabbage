@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Variant` ADD COLUMN `available` INTEGER NOT NULL DEFAULT 0;
