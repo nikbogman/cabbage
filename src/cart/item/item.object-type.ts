@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Item as Model } from "@prisma/client";
-import { ArrayResponse } from "src/utilities/response";
+import { Response } from "src/utilities/response";
 
 @ObjectType()
 export class Item implements Model {
@@ -11,7 +11,7 @@ export class Item implements Model {
     cartId: string;
 
     @Field()
-    variantId: string;
+    productId: string;
 
     @Field()
     total: number;
@@ -21,4 +21,4 @@ export class Item implements Model {
 }
 
 @ObjectType()
-export class CartResponse extends ArrayResponse(Item) { }
+export class ItemResponse extends Response(Item) { }

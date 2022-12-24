@@ -5,32 +5,28 @@ import { Prisma } from '@prisma/client';
 export class CartService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async getCart(id: string, userId: string) {
-        const expiresAt = new Date(Date.now() + 4000)
-        if (userId) {
-            return this.prisma.cart.upsert({
-                where: { userId },
-                update: {},
-                create: { userId, expiresAt },
-                include: { items: true }
-            })
-        }
+    async upsertWith(id: string = "", userId: string, args: Prisma.CartArgs) {
+
         return this.prisma.cart.upsert({
-            where: { id }, update: {},
-            create: { userId, expiresAt },
-            include: { items: true }
+            where: { id, userId },
+            update: {},
+            create: {
+                userId,
+                expiresAt: new Date(Date.now() + 5000)
+            },
+            ...args
         });
     }
 
-    async updateCart(id: string, newTotal: number) {
+    async updateTotalById(id: string, newTotal: number, args: Prisma.CartArgs) {
         return this.prisma.cart.update({
             where: { id },
             data: { total: newTotal },
-            include: { items: true }
+            ...args
         })
     }
 
-    async deleteCart(id: string, includes?: Prisma.CartInclude) {
+    async deleteById(id: string, includes?: Prisma.CartInclude) {
         return this.prisma.cart.delete({ where: { id }, include: includes });
     }
 }

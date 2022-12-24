@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Cart as Model } from "@prisma/client";
 import { Response } from "src/utilities/response";
+import { Item } from "./item/item.object-type";
 
 @ObjectType()
 export class Cart implements Model {
@@ -15,6 +16,9 @@ export class Cart implements Model {
 
     @Field()
     expiresAt: Date;
+
+    @Field(() => [Item])
+    items: Item[]
 }
 
 

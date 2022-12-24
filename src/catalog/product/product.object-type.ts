@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Product as Model } from "@prisma/client";
-import { FieldedErrorObjectType, IFieldedError } from "src/utilities/error";
 import { ArrayResponse, Response } from "src/utilities/response";
 
 @ObjectType()
@@ -15,10 +14,19 @@ export class Product implements Model {
     name: string;
 
     @Field()
+    optionName: string;
+
+    @Field()
     description: string;
 
     @Field()
-    categoryId: string;
+    price: number;
+
+    @Field()
+    stock: number;
+
+    @Field()
+    available: number;
 }
 
 @ObjectType()
