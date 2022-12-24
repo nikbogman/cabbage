@@ -1,5 +1,4 @@
 import { Query, Resolver, Mutation, Args } from '@nestjs/graphql';
-import { BooleanResponse } from 'src/utilities/boolean.response';
 import { FieldedError } from 'src/utilities/error';
 import { ItemResponse } from './item.object-type';
 import { ItemService } from './item.service';
@@ -17,7 +16,5 @@ export class ItemResolver {
             throw new FieldedError('id argument', `Item with id ${id} not Found`)
         return { data: item }
     }
-
-
 }
 

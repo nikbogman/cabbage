@@ -1,11 +1,13 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { FieldedErrorObjectType, IFieldedError } from './error';
 
 @ObjectType()
 export class BooleanResponse {
-    @Field(() => FieldedErrorObjectType, { nullable: true })
-    error?: IFieldedError;
+    @Field()
+    message: string;
 
-    @Field(() => Boolean, { nullable: true })
-    data?: boolean;
+    @Field({ nullable: true })
+    issue?: string;
+
+    @Field(() => Boolean)
+    success: boolean;
 }
